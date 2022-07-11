@@ -2,12 +2,14 @@ import pygame
 pygame.font.init()
 from time import time
 from random import randint
+import sys
 
 screen = pygame.display.set_mode((640, 480))
 pygame.display.set_caption("Timer to destroy Ani (Godot)")
+clock = pygame.time.Clock()
 
 size = 75
-start = 60
+start = 10
 font = pygame.font.SysFont(None, size)
 t0 = start + time()
 particles = []
@@ -17,22 +19,20 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             pygame.quit()
-            exit()
+            sys.exit()
 
     t1 = time()
     timer = round(t0 - t1, 1)
     if timer < 0:
-        pygame.quit()
-        exit()
-
+        timer = 0.0
 
     try:
-        rand_pos = (randint(-5, 5)  * start * 0.1 / timer, randint(-5, 5)  * start * 0.1 / timer)
+        rand_pos = (randint(-5, 5) * start * 0.1 / timer, randint(-5, 5) * start * 0.1 / timer)
     except ZeroDivisionError:
         rand_pos = (0, 0)
 
     surface = font.render(str(abs(timer)), True, (255, 255/start * timer, 255/start * timer))
-    particles.append([[screen.get_width() // 2 + rand_pos[0], screen.get_height() // 2 + rand_pos[1]], [randint(0, 20) / 10 - 1, randint(0, 20) / 10 - 1], randint(10, 50)])
+    particles.append([[screen.get_width() // 2 + rand_pos[0], screen.get_height() // 2 + rand_pos[1]], [randint(0, 20) / 10 - 1, randint(0, 20) / 10 - 1], randint(10, 40)])
     
     for particle in particles:
         particle[0][0] += particle[1][0] + rand_pos[0]
@@ -42,5 +42,5 @@ while True:
         if particle[2] <= 0:
             particles.remove(particle)
     screen.blit(surface, (screen.get_width() // 2 - surface.get_width() // 2 + rand_pos[0], screen.get_height() // 2 - surface.get_height() // 2 + rand_pos[1]))
-    
     pygame.display.update()
+    clock.tick(120)
