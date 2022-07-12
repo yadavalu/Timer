@@ -9,7 +9,7 @@ pygame.display.set_caption("Timer to destroy Ani (Godot)")
 clock = pygame.time.Clock()
 
 size = 75
-start = 10
+start = 60
 font = pygame.font.SysFont(None, size)
 t0 = start + time()
 particles = []
