@@ -9,10 +9,11 @@ pygame.display.set_caption("Timer to destroy Ani (Godot)")
 clock = pygame.time.Clock()
 
 size = 75
-start = 60
+start = 10
 font = pygame.font.SysFont(None, size)
 t0 = start + time()
 particles = []
+index_remove = None
 
 while True:
     screen.fill((0, 0, 0))
@@ -34,13 +35,17 @@ while True:
     surface = font.render(str(abs(timer)), True, (255, 255/start * timer, 255/start * timer))
     particles.append([[screen.get_width() // 2 + rand_pos[0], screen.get_height() // 2 + rand_pos[1]], [randint(0, 20) / 10 - 1, randint(0, 20) / 10 - 1], randint(10, 40)])
     
+    index_remove = None
     for particle in particles:
         particle[0][0] += particle[1][0] + rand_pos[0]
         particle[0][1] += particle[1][1] + rand_pos[1]
         particle[2] -= 0.1
         pygame.draw.circle(screen, (0, 255 - 255/start * timer, 255 - 255/start * timer), particle[0], particle[2])
         if particle[2] <= 0:
-            particles.remove(particle)
+            index_remove = particle
+    if index_remove is not None:
+        particles.remove(index_remove)
+    
     screen.blit(surface, (screen.get_width() // 2 - surface.get_width() // 2 + rand_pos[0], screen.get_height() // 2 - surface.get_height() // 2 + rand_pos[1]))
     pygame.display.update()
     clock.tick(120)
